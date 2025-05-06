@@ -24,6 +24,16 @@ Edit the following params in `mot_challenge_from_labels.sh` accordingly.
 
 Apart from the console printout, TrackEval also writes the metrics to the `data/trackers/mot_challenge/<dataset-name>` directory.
 
+### For MCTrack usage
+
+From the `scripts/` folder, run
+
+```
+python convert_to_mctrack_format.py --dets_dir /path/to/dets --output_dir /path/to/output --scene_name helsinki
+```
+
+This script creates a .json file that will be stored in ``--output_dir`` for MCTrack to read as detections. More on [this](https://curium.atlassian.net/wiki/spaces/kalium/pages/1593016412/Experiment+Our+Tracking+vs+MCTrack?atlOrigin=eyJpIjoiOGViMGMzZTE2YjU4NDM0MGE4M2Y2ODg5YjI0ZWI3NjIiLCJwIjoiYyJ9) page.
+
 
 ## **NEW**: RobMOTS Challenge 2021
 

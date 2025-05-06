@@ -1,6 +1,7 @@
 from collections import defaultdict
 import os
 import argparse
+import sys
 
 
 def convert_labels_to_motc_format(labels_path, is_gt=False, skip_frames=0):
@@ -102,12 +103,12 @@ def create_gt_folder(dataset_name, subset_name, gt_labels_path, skip_frames, out
     write_labels_to_file(labels_gt, os.path.join(labels_gt_output_dir, "gt.txt"))
     print(f"Wrote to GT label directory: {gt_folder_path}")
 
-def create_eval_folder(dataset_name, subset_name, eval_labels_path, skip_frames, output_dir):
+def create_eval_folder(dataset_name, exp_name, subset_name, eval_labels_path, skip_frames, output_dir):
     labels_eval, _ = convert_labels_to_motc_format(eval_labels_path, is_gt=False, skip_frames=skip_frames)
     eval_folder_path = os.path.join(output_dir,
         "trackers", "mot_challenge", f"{dataset_name}-test")
     os.makedirs(eval_folder_path, exist_ok=True)
-    tracker_name = "MPNTrack"
+    tracker_name = exp_name
     tracker_dir = os.path.join(eval_folder_path, tracker_name)
     os.makedirs(tracker_dir, exist_ok=True)
     data_dir = os.path.join(tracker_dir, "data")
@@ -131,6 +132,7 @@ def create_seqmap_file(dataset_name, subset_names, output_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert labels to MOTC format.")
     parser.add_argument("--dataset_name", type=str, required=True, help="Name of the dataset.")
+    parser.add_argument("--exp_name", type=str, default="kalium", help="Name of the experiment.")
     parser.add_argument("--gt_labels", type=str, nargs='+', required=True, help="Path to the gt labels directory.")
     parser.add_argument("--eval_labels", type=str,nargs='+', required=True, help="Path to the evaluation labels directory.")
     parser.add_argument("--skip_frames", type=int, default=0, help="Number of frames to skip.")
@@ -139,6 +141,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dataset_name = args.dataset_name
+    exp_name = args.exp_name
     gt_labels_paths = args.gt_labels
     eval_labels_paths = args.eval_labels
     skip_frames = args.skip_frames
@@ -152,5 +155,5 @@ if __name__ == "__main__":
         # Create GT folder
         create_gt_folder(dataset_name, subset_name, gt_labels_path, skip_frames, output_dir)
         # Create Eval folder
-        create_eval_folder(dataset_name, subset_name, eval_labels_path, skip_frames, output_dir)
+        create_eval_folder(dataset_name, exp_name, subset_name, eval_labels_path, skip_frames, output_dir)
     create_seqmap_file(dataset_name, subset_names, output_dir)
